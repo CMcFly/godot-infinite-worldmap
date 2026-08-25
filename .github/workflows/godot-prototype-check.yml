@@ -9,21 +9,30 @@ on:
 jobs:
   boot-prototype:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        godot_version:
+          - 4.2.2
+          - 4.7.2
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download Godot 4.2.2
+      - name: Download Godot ${{ matrix.godot_version }}
         run: |
-          wget -q https://github.com/godotengine/godot/releases/download/4.2.2-stable/Godot_v4.2.2-stable_linux.x86_64.zip -O godot.zip
+          VERSION="${{ matrix.godot_version }}"
+          wget -q "https://github.com/godotengine/godot/releases/download/${VERSION}-stable/Godot_v${VERSION}-stable_linux.x86_64.zip" -O godot.zip
           unzip -q godot.zip
-          chmod +x Godot_v4.2.2-stable_linux.x86_64
+          chmod +x "Godot_v${VERSION}-stable_linux.x86_64"
 
       - name: Parse project in editor mode
         run: |
-          ./Godot_v4.2.2-stable_linux.x86_64 --headless --path . --editor --quit
+          VERSION="${{ matrix.godot_version }}"
+          "./Godot_v${VERSION}-stable_linux.x86_64" --headless --path . --editor --quit
 
       - name: Boot main scene briefly
         run: |
-          ./Godot_v4.2.2-stable_linux.x86_64 --headless --path . --quit-after 4
+          VERSION="${{ matrix.godot_version }}"
+          "./Godot_v${VERSION}-stable_linux.x86_64" --headless --path . --quit-after 4
