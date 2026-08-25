@@ -28,7 +28,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if pending_pan_pixels != Vector2.ZERO:
-		worldmap.coordinates -= pending_pan_pixels / max(worldmap.zoom, 0.0001)
+		worldmap.coordinates -= pending_pan_pixels / maxf(float(worldmap.zoom), 0.0001)
 		pending_pan_pixels = Vector2.ZERO
 		refresh_queued = false
 	elif refresh_queued:
@@ -247,22 +247,22 @@ func _on_map_resized() -> void:
 func _sync_camera_size() -> void:
 	if not worldmap or worldmap.size.x < 32 or worldmap.size.y < 32:
 		return
-	var target := Vector2i(max(64, roundi(worldmap.size.x)), max(64, roundi(worldmap.size.y)))
+	var target: Vector2i = Vector2i(maxi(64, roundi(worldmap.size.x)), maxi(64, roundi(worldmap.size.y)))
 	if worldmap.camera_size != target:
 		worldmap.camera_size = target
 
 func _fit_world() -> void:
 	if not worldmap or worldmap.size.x < 32 or worldmap.size.y < 32:
 		return
-	var fit_zoom := min(worldmap.size.x / float(WORLD_SIZE.x), worldmap.size.y / float(WORLD_SIZE.y)) * 0.92
-	worldmap.zoom = clamp(fit_zoom, 0.05, 32.0)
+	var fit_zoom: float = minf(worldmap.size.x / float(WORLD_SIZE.x), worldmap.size.y / float(WORLD_SIZE.y)) * 0.92
+	worldmap.zoom = clampf(fit_zoom, 0.05, 32.0)
 	worldmap.coordinates = Vector2(WORLD_SIZE) * 0.5
 
 func _screen_to_world(local_position: Vector2) -> Vector2:
-	return worldmap.coordinates + (local_position - worldmap.size * 0.5) / max(worldmap.zoom, 0.0001)
+	return worldmap.coordinates + (local_position - worldmap.size * 0.5) / maxf(float(worldmap.zoom), 0.0001)
 
 func _screen_to_cell(local_position: Vector2) -> Vector2i:
-	var p := _screen_to_world(local_position)
+	var p: Vector2 = _screen_to_world(local_position)
 	return Vector2i(floori(p.x), floori(p.y))
 
 func _paint_cell(cell: Vector2i) -> void:
@@ -278,14 +278,14 @@ func _paint_to(cell: Vector2i) -> void:
 	refresh_queued = true
 
 func _zoom_at(local_position: Vector2, multiplier: float) -> void:
-	var before := _screen_to_world(local_position)
-	var new_zoom := clamp(worldmap.zoom * multiplier, 0.05, 32.0)
+	var before: Vector2 = _screen_to_world(local_position)
+	var new_zoom: float = clampf(float(worldmap.zoom) * multiplier, 0.05, 32.0)
 	worldmap.zoom = new_zoom
-	var after := _screen_to_world(local_position)
+	var after: Vector2 = _screen_to_world(local_position)
 	worldmap.coordinates += before - after
 
 func _update_cursor(local_position: Vector2) -> void:
-	var p := _screen_to_world(local_position)
+	var p: Vector2 = _screen_to_world(local_position)
 	cursor_label.text = "world: %.1f, %.1f   cell: %d, %d" % [p.x, p.y, floori(p.x), floori(p.y)]
 
 func _on_map_gui_input(event: InputEvent) -> void:
