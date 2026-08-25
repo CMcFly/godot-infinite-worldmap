@@ -1,37 +1,29 @@
 ; Engine configuration file.
-; It's best edited using the editor UI and not directly,
-; since the parameters that go here are not all obvious.
-;
-; Format:
-;   [section] ; section goes between []
-;   param=value ; assign values to parameters
+; WorldWake Painter prototype branch.
 
 config_version=5
 
 [application]
 
-config/name="infinite worldmap"
-run/main_scene="res://examples/demo_fullmap_mono.tscn"
-config/features=PackedStringArray("4.2", "C#", "Forward Plus")
+config/name="WorldWake Painter Prototype"
+run/main_scene="res://worldwake_painter/painter.tscn"
+config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://icon.png"
 
-[dotnet]
+[display]
 
-project/assembly_name="infiniteWorldmap"
+window/size/viewport_width=1440
+window/size/viewport_height=900
+window/size/window_width_override=1440
+window/size/window_height_override=900
+window/stretch/mode="canvas_items"
 
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/procedural_world_map/plugin.cfg")
 
-[input]
+[rendering]
 
-zoom_in={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194323,"key_label":0,"unicode":0,"echo":false,"script":null)
-]
-}
-zoom_out={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194324,"key_label":0,"unicode":0,"echo":false,"script":null)
-]
-}
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.027, 0.043, 0.051, 1)
